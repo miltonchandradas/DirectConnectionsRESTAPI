@@ -4,15 +4,15 @@ const geocoder = require("../utils/geocoder");
 const Isochrones = require("../utils/isochrones");
 
 
-// @desc	Get a customer
-// @route	GET /api/v1/customers/:id
+// @desc	Get a user
+// @route	GET /api/v1/users/:id
 // @access	Public
-exports.getCustomer = asyncHandler(async (req, res, next) => {
+exports.getUser = asyncHandler(async (req, res, next) => {
 	
 	const dbClass = require("../utils/dbPromises");
 	let db = new dbClass(req.db);
 	
-	const sql = `SELECT * FROM "Customer" WHERE "id" = ?`;
+	const sql = `SELECT * FROM "User" WHERE "id" = ?`;
 	console.log(sql);
 	
 	const statement = await db.preparePromisified(sql);
@@ -24,15 +24,15 @@ exports.getCustomer = asyncHandler(async (req, res, next) => {
 });
 
 
-// @desc	Get all customers
-// @route	GET /api/v1/customers
+// @desc	Get all users
+// @route	GET /api/v1/users
 // @access	Public
-exports.getCustomers = asyncHandler(async (req, res, next) => {
+exports.getUsers = asyncHandler(async (req, res, next) => {
 
 	const dbClass = require("../utils/dbPromises");
 	let db = new dbClass(req.db);
 	
-	const sql = `SELECT * FROM "Customer"`;
+	const sql = `SELECT * FROM "User"`;
 	console.log(sql);
 	
 	const statement = await db.preparePromisified(sql);
@@ -45,10 +45,10 @@ exports.getCustomers = asyncHandler(async (req, res, next) => {
 
 
 
-// @desc	Add customer
-// @route	POST /api/v1/customers
+// @desc	Add user
+// @route	POST /api/v1/users
 // @access	Public
-exports.addCustomer = asyncHandler(async (req, res, next) => {
+exports.addUser = asyncHandler(async (req, res, next) => {
 	
 	const { firstName, lastName, email, address } = req.body;
 	const profiles = 'driving-car';
@@ -79,26 +79,26 @@ exports.addCustomer = asyncHandler(async (req, res, next) => {
 	const dbClass = require("../utils/dbPromises");
 	let db = new dbClass(req.db);
 	
-	const sql = `INSERT INTO "Customer" ("firstName", "lastName", "email", "longitude", "latitude", "formattedAddress", "isochrone5mCar", "coordinates") VALUES(?, ?, ?, ?, ?, ?, ST_GEOMFROMGEOJSON('${polygons}', 4326), new ST_POINT(${location.coordinates[0]}, ${location.coordinates[1]}).ST_SRID(4326).ST_TRANSFORM( 4326))`;
+	const sql = `INSERT INTO "User" ("firstName", "lastName", "email", "longitude", "latitude", "formattedAddress", "isochrone5mCar", "coordinates") VALUES(?, ?, ?, ?, ?, ?, ST_GEOMFROMGEOJSON('${polygons}', 4326), new ST_POINT(${location.coordinates[0]}, ${location.coordinates[1]}).ST_SRID(4326).ST_TRANSFORM( 4326))`;
 	console.log(sql);
 	
 	const statement = await db.preparePromisified(sql);
 	
 	const results = await db.statementExecPromisified(statement, [firstName, lastName, email, location.coordinates[0], location.coordinates[1], location.formattedAddress]);
 	
-	res.status(201).json({success: true, message: "Successfully added customer to database..."});
+	res.status(201).json({success: true, message: "Successfully added user to database..."});
 	
 });
 
-// @desc	Delete customer
-// @route	DELETE /api/v1/customers/:id
+// @desc	Delete user
+// @route	DELETE /api/v1/users/:id
 // @access	Public
-exports.deleteCustomer = asyncHandler(async (req, res, next) => {
+exports.deleteUser = asyncHandler(async (req, res, next) => {
 
 	const dbClass = require("../utils/dbPromises");
 	let db = new dbClass(req.db);
 	
-	const sql = `DELETE FROM "Customer" WHERE "id" = ?`;
+	const sql = `DELETE FROM "User" WHERE "id" = ?`;
 	console.log(sql);
 	
 	const statement = await db.preparePromisified(sql);
@@ -110,17 +110,17 @@ exports.deleteCustomer = asyncHandler(async (req, res, next) => {
 });
 
 
-// @desc	Update customer
-// @route	PUT /api/v1/customers/:id
+// @desc	Update user
+// @route	PUT /api/v1/users/:id
 // @access	Public
-exports.updateCustomer = asyncHandler(async (req, res, next) => {
+exports.updateUser = asyncHandler(async (req, res, next) => {
 	
 	console.log(req.body);
 	
 	const dbClass = require("../utils/dbPromises");
 	let db = new dbClass(req.db);
 	
-	const sql1 = `SELECT * FROM "Customer" WHERE "id" = ?`;
+	const sql1 = `SELECT * FROM "User" WHERE "id" = ?`;
 	console.log(sql1);
 	
 	const statement1 = await db.preparePromisified(sql1);
@@ -128,12 +128,12 @@ exports.updateCustomer = asyncHandler(async (req, res, next) => {
 	
 	if (result1.length !== 1) {
 		return next(
-			new ErrorResponse(`Customer not found`, 404)
+			new ErrorResponse(`User not found`, 404)
 		);
 		// return res.status(400).json({success: false});
 	}
 	
-	const sql2 = `UPDATE "Customer" SET "address" = ? WHERE "id" = ?`;
+	const sql2 = `UPDATE "User" SET "address" = ? WHERE "id" = ?`;
 	console.log(sql2);	
 	
 	const statement2 = await db.preparePromisified(sql2);

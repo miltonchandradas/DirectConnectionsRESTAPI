@@ -39,6 +39,7 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
 const auth = require("./routes/auth");
 const products = require("./routes/products");
+const opportunities = require("./routes/opportunities");
 
 const app = express();
 
@@ -61,6 +62,7 @@ app.use(xsHDBConn.middleware(hanaOptions.hana));
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use("/api/v1/products", products);
+app.use("/api/v1/opportunities", opportunities);
 app.use("/api/v1/auth", auth);
 
 app.use(errorHandler);
