@@ -1,0 +1,7 @@
+applications:
+  - name: mynodeproject
+    random-route: true
+    memory: 512M
+    disk_quota: 512M
+    buildpacks:
+      - nodejs_buildpack
